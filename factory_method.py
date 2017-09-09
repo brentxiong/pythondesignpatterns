@@ -1,9 +1,10 @@
 import xml.etree.ElementTree as etree
 import json
+import os
 class JSONConnector:
     def __init__(self, filepath):
         self.data = dict()
-        with open(filepath, mode='r', encodeing='utf-8') as f:
+        with open(filepath, mode='r') as f:
             self.data = json.load(f)
     @property
     def parsed_data(self):
@@ -38,25 +39,24 @@ def main():
     sqlite_factory = connect_to('data\person.sq3')
     print
 
-    xml_factory = connect_to('data/person.xml')
+    xml_factory = connect_to('data\person.xml')
     xml_data = xml_factory.parsed_data
-    liars = xml_data.findall(".//{}[{}='{}']".format('person', 'lastname', 'Liar'))
+    liars = xml_data.findall(".//{}[{}='{}']".format('person', 'lastName', 'Liar'))
     print ('found:{} persons'.format(len(liars)))
     for liar in liars:
-        print ('first name: {}'.format(liar.find('firstname').text))
-        print ('last name: {}'.format(liar.find('lastname').text))
+        print ('first name: {}'.format(liar.find('firstName').text))
+        print ('last name: {}'.format(liar.find('lastName').text))
         for p in liar.find('phoneNumbers'):
             print ('phone number ({})'.format(p.attrib['type']), p.text)
-        print
 
-        json_factory = connect_to('data/donut.json')
-        json_data = json_factory.parsed_data
-        print ('found: {} donuts'.format(len(json_data)))
-        for donut in json_data:
-            print ('name: {}'.format(donut['name']))
-            print ('price: {}'.format(donut['ppu']))
-            for t in donut['topping']:
-                print ('topping: {} {}'.format(t['id'], t['type']))
+    json_factory = connect_to('data\donut.json')
+    json_data = json_factory.parsed_data
+    print ('found: {} donuts'.format(len(json_data)))
+    for donut in json_data:
+        print ('name: {}'.format(donut['name']))
+        print ('price: {}'.format(donut['ppu']))
+        for t in donut['topping']:
+            print ('topping: {} {}'.format(t['id'], t['type']))
 
 if __name__ == '__main__':
     main()
