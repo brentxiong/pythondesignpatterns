@@ -1,4 +1,4 @@
-class Publisher:
+class Publisher(object):
     def __init__(self):
         self.observers = []
 
@@ -25,7 +25,7 @@ class DefaultFormatter(Publisher):
         self._data = 0
 
     def __str__(self):
-        return "DefaultFormatter: '{}' has data = {}".format(self.name, self._data)
+        return "{}: '{}' has data = {}".format(type(self).__name__,self.name, self._data)
 
     @property
     def data(self):
@@ -33,21 +33,21 @@ class DefaultFormatter(Publisher):
 
     @data.setter
     def data(self, new_value):
-        print 'Here'
         try:
             self._data = int(new_value)
+            self.notify()
         except ValueError as e:
             print 'Error: {}'.format(e)
-        else:
-            self.notify()
 
-class HexFormatter:
-    def notify(self, publisher):
-        print "HexFormatter: '{}' has now hex data = {}".format(publisher.name, hex(publisher.data))
 
-class BinaryFormatter:
+
+class HexFormatter(object):
     def notify(self, publisher):
-        print "BinaryFormatter: '{}' has now bin data = {}".format(publisher.name, bin(publisher.data))
+        print "{}: '{}' has now hex data = {}".format(type(self).__name__,publisher.name, hex(publisher.data))
+
+class BinaryFormatter(object):
+    def notify(self, publisher):
+        print "{}: '{}' has now bin data = {}".format(type(self).__name__,publisher.name, bin(publisher.data))
 
 def main():
     df = DefaultFormatter('test1')
